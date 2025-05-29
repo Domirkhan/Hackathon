@@ -1,0 +1,130 @@
+.register-container {
+  min-height: 130vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-color: #E7F2F8;
+}
+
+.register-container h2 {
+  color: #1B4965;
+  font-size: 32px;
+  margin-bottom: 30px;
+  font-weight: 600;
+}
+
+.register-form {
+  background: white;
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(27, 73, 101, 0.1);
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.register-form input {
+  padding: 15px;
+  border: 2px solid #E7F2F8;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+.register-form input:focus {
+  outline: none;
+  border-color: #1B4965;
+}
+
+.register-form button {
+  background: #1B4965;
+  color: white;
+  border: none;
+  padding: 15px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+
+.register-form button:hover {
+  background: #2d6f98;
+}
+.role-selector {
+  margin-top: 10px;
+}
+
+.role-selector h3 {
+  color: #1B4965;
+  font-size: 18px;
+  margin-bottom: 15px;
+  font-weight: 500;
+}
+
+.role-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.role-option {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 10px;
+  border: 2px solid #E7F2F8;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.role-option:hover {
+  border-color: #1B4965;
+  background-color: #f8fbfd;
+}
+
+.role-option input[type="radio"] {
+  margin-right: 12px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.role-label {
+  font-size: 16px;
+  color: #1B4965;
+}
+
+/* Стили для выбранной опции */
+.role-option input[type="radio"]:checked + .role-label {
+  font-weight: 600;
+}
+
+.role-option input[type="radio"]:checked {
+  accent-color: #1B4965;
+}
+@media (max-width: 768px) {
+  .register-container {
+    padding: 15px;
+  }
+
+  .register-form {
+    padding: 30px 20px;
+  }
+    .role-option {
+    padding: 8px;
+  }
+  
+  .role-selector h3 {
+    font-size: 16px;
+  }
+  
+  .role-label {
+    font-size: 14px;
+  }
+}
