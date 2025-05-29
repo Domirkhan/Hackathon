@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Course from './src/components/main/Courses';
 import './App.css';
 import Review from './components/main/Review';
 import SearchMain from './components/main/SearchMain';
@@ -9,6 +10,9 @@ import Footer from './layout/Footer';
 import Login from './auth/Login';
 import Register from './auth/Register';
 import { AuthProvider } from './context/AuthContext';
+import Courses from './src/components/main/Courses';
+
+
 function App() {
   return (
     <AuthProvider>
@@ -21,10 +25,12 @@ function App() {
               <SearchMain />
               <Test />
               <Review />
+              <Courses />
             </main>
           } />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/courses" element={<Courses />} />
         </Routes>
         <Footer />
       </div>
