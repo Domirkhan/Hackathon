@@ -132,6 +132,16 @@
   box-shadow: 0 6px 20px rgba(27, 73, 101, 0.3);
 }
 
+/* Testing specific styles */
+.testing-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+  background-color: #E7F2F8;
+}
+
 @media (max-width: 768px) {
   .test-container {
     padding: 40px 20px;

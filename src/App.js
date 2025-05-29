@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate, Link} from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, Link } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import './App.css';
 import './index.css';
@@ -10,7 +10,6 @@ import Test from './components/main/Test';
 import Header from './layout/Header';
 import Footer from './layout/Footer';
 import Courses from './components/main/Courses';
-import Testing from './components/Test/Testing';
 
 // Компоненты авторизации
 import Login from './auth/Login';
@@ -20,13 +19,13 @@ import { AuthProvider } from './context/AuthContext';
 // Компоненты админ-панели
 import JobsManagement from './pages/admin/JobsManagement';
 import InternshipsManagement from './pages/admin/InternshipsManagement';
+
+// Компоненты дашбордов
+import StudentDashboard from './pages/student/StudentDashboard';
 import EmployerDashboard from './pages/dashboard/EmployerDashboard';
 
-// Компоненты студента
-import StudentDashboard from './pages/student/StudentDashboard';
-
 // Защищенный маршрут
-const PrivateRoute = ({ element, allowedRoles }) => {
+const PrivateRoute = ({ children, allowedRoles }) => {
   const { user, loading } = useAuth();
 
   if (loading) {
@@ -37,7 +36,7 @@ const PrivateRoute = ({ element, allowedRoles }) => {
     return <Navigate to="/login" replace />;
   }
 
-  return element;
+  return children;
 };
 
 // Компонент админ-панели
@@ -82,47 +81,32 @@ function App() {
             <Courses />
           </main>
         } />
-        
-        <Route path="/login" element={
-          user ? (
-            user.role === 'employer' ? 
-              <Navigate to="/admin/dashboard" replace /> : 
-              <Navigate to="/student/dashboard" replace />
-          ) : (
-            <Login />
-          )
-        } />
-        
+        <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/testing" element={<Testing />} />
         <Route path="/courses" element={<Courses />} />
 
-        {/* Маршруты для студента */}
-        <Route path="/student/dashboard" element={
-          <PrivateRoute 
-            allowedRoles={['student']} 
-            element={<StudentDashboard />}
-          />
+        {/* Дашборд для студента */}
+        <Route path="/dashboard" element={
+          <PrivateRoute allowedRoles={['student']}>
+            <StudentDashboard />
+          </PrivateRoute>
         } />
 
-        {/* Маршруты для работодателя */}
-        <Route path="/admin/*" element={
-          <PrivateRoute 
-            allowedRoles={['employer']} 
-            element={
-              <AdminLayout>
-                <Routes>
-                  <Route index element={<Navigate to="dashboard" replace />} />
-                  <Route path="dashboard" element={<EmployerDashboard />} />
-                  <Route path="jobs" element={<JobsManagement />} />
-                  <Route path="internships" element={<InternshipsManagement />} />
-                </Routes>
-              </AdminLayout>
-            }
-          />
+        {/* Маршруты админ-панели для работодателя */}
+        <Route path="/admin" element={
+          <PrivateRoute allowedRoles={['employer']}>
+            <AdminLayout>
+              <Routes>
+                <Route path="dashboard" element={<EmployerDashboard />} />
+                <Route path="jobs" element={<JobsManagement />} />
+                <Route path="internships" element={<InternshipsManagement />} />
+              </Routes>
+            </AdminLayout>
+          </PrivateRoute>
         } />
 
         {/* Редиректы */}
+        <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
         <Route path="/dashboard" element={
           user ? (
             user.role === 'employer' ? (
@@ -143,7 +127,7 @@ function App() {
   );
 }
 
-// Корневой компонент с провайдером
+// Обертка с провайдером авторизации
 export default function AppWrapper() {
   return (
     <Router>
