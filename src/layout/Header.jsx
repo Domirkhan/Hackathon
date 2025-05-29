@@ -47,7 +47,7 @@ function Header() {
                         <li><Link to="/">Главная</Link></li>
                         <li><Link to="/test">Стажировка</Link></li>
                         <li><Link to="/test">Вакансии</Link></li>
-                        <li><Link to="/test">Курсы</Link></li>
+                        <li><Link to="/">Курсы</Link></li>
                     </ul>
 
                     {user ? (

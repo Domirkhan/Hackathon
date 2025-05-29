@@ -1,3 +1,5 @@
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Course from './src/components/main/Courses';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import './App.css';
@@ -13,6 +15,10 @@ import Footer from './layout/Footer';
 // Компоненты авторизации
 import Login from './auth/Login';
 import Register from './auth/Register';
+import { AuthProvider } from './context/AuthContext';
+import Courses from './src/components/main/Courses';
+
+
 
 // Компоненты админ-панели
 import JobsManagement from './pages/admin/JobsManagement';
@@ -70,10 +76,12 @@ function App() {
               <SearchMain />
               <Test />
               <Review />
+              <Courses />
             </main>
           } />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/courses" element={<Courses />} />
 
           {/* Защищенные маршруты для работодателя */}
           <Route path="/admin" element={
