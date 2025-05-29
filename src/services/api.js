@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { mockVacancies } from './mockData';
 
 const API_URL = 'http://localhost:5000/api';
 
@@ -61,23 +62,15 @@ export const authAPI = {
 // Методы для работы с вакансиями
 export const vacancyAPI = {
   getAll: async () => {
-    try {
-      const response = await api.get('/vacancies');
-      return response.data.data;
-    } catch (error) {
-      console.error('Ошибка при получении вакансий:', error);
-      return [];
-    }
+    return mockVacancies;
   },
-
-  getEmployerVacancies: async () => {
+  
+  getById: async (id) => {
     try {
-      const response = await api.get('/vacancies/employer');
-      return {
-        success: true,
-        data: response.data?.data || [],
-        message: response.data?.message
-      };
+      const all = await vacancyAPI.getAll();
+      const vacancy = all.find(v => v._id === id);
+      if (!vacancy) throw new Error('Vacancy not found');
+      return vacancy;
     } catch (error) {
       console.error('Ошибка при получении вакансий работодателя:', {
         message: error.message,

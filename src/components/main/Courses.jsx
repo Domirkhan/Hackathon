@@ -76,10 +76,6 @@ function Courses() {
 									<Link
 										to={`/courses/${course.id}`}
 										className="course-button"
-										onClick={(e) => {
-											e.preventDefault();
-											window.location.href = `/courses/${course.id}`;
-										}}
 									>
 										Подробнее
 									</Link>

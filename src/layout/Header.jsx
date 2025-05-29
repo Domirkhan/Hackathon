@@ -45,44 +45,31 @@ function Header() {
                 </div>
                 
                 <nav className="nav-menu">
-                    <ul className="nav-list">
-                        <li><NavLink to="/" className="nav-link">Главная</NavLink></li>
-                        <li><NavLink to="/jobs" className="nav-link">Вакансии</NavLink></li>
-                        <li><NavLink to="/internships" className="nav-link">Стажировки</NavLink></li>
-                        <li><NavLink to="/courses" className="nav-link">Курсы</NavLink></li>
-
-                        {!user ? (
-                            <li className="nav-item">
-                                <NavLink to="/login" className="nav-link">
-                                    <img  alt="Профиль" className="user-icon" />
-                                </NavLink>
-                            </li>
-                        ) : (
-                            <li className="nav-item dropdown">
-                                <button
-                                    className="nav-link dropdown-toggle"
-                                    onClick={toggleDropdown}
-                                >
-                                    <img  alt="Профиль" className="user-icon" />
-                                </button>
-                                <ul className={`dropdown-menu ${isDropdownOpen ? 'show' : ''}`}>
-                                    <li>
-                                        <span className="dropdown-user-info">
-                                            {user.nickname}
-                                        </span>
-                                    </li>
-                                    <li>
-                                        <button
-                                            onClick={handleLogout}
-                                            className="dropdown-item"
-                                        >
-                                            Выйти
-                                        </button>
-                                    </li>
-                                </ul>
-                            </li>
-                        )}
+                    <ul>
+                        <li><Link to="/">Главная</Link></li>
+                        <li><Link to="/jobs" className="nav-link">Вакансии</Link></li>
+                        <li><Link to="/lessons/:courseId">Курсы</Link></li>
                     </ul>
+
+                    {user ? (
+                        <div className="user-controls">
+                            <button className="profile-button" onClick={handleProfile}>
+                                {user.nickname}
+                            </button>
+                            <button className="logout-button" onClick={handleLogout}>
+                                Выйти
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="auth-buttons">
+                            <button className='login-button' onClick={handleLogin}>
+                                Войти
+                            </button>
+                            <button className='register-button' onClick={handleRegister}>
+                                Регистрация
+                            </button>
+                        </div>
+                    )}
                 </nav>
 
                 <div className="mobile-menu">
@@ -94,10 +81,10 @@ function Header() {
                     
                     <div className={`mobile-nav ${isMenuOpen ? 'active' : ''}`}>
                         <ul>
-                            <li><NavLink to="/" onClick={() => setIsMenuOpen(false)}>Главная</NavLink></li>
-                            <li><NavLink to="/jobs" onClick={() => setIsMenuOpen(false)}>Вакансии</NavLink></li>
-                            <li><NavLink to="/internships" onClick={() => setIsMenuOpen(false)}>Стажировки</NavLink></li>
-                            <li><NavLink to="/courses" onClick={() => setIsMenuOpen(false)}>Курсы</NavLink></li>
+                            <li><Link to="/" onClick={() => setIsMenuOpen(false)}>Главная</Link></li>
+                            <li><Link to="/internships" onClick={() => setIsMenuOpen(false)}>Стажировки</Link></li>
+                            <li><Link to="/jobs" onClick={() => setIsMenuOpen(false)}>Вакансии</Link></li>
+                            <li><Link to="/courses" onClick={() => setIsMenuOpen(false)}>Курсы</Link></li>
                         </ul>
 
                         {user ? (
