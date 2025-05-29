@@ -25,6 +25,9 @@ import InternshipsManagement from './pages/admin/InternshipsManagement';
 // Компоненты дашбордов
 import StudentDashboard from './pages/student/StudentDashboard';
 import EmployerDashboard from './pages/admin/dashboard/EmployerDashboard';
+import JobsList from './pages/jobs/JobsList';
+import JobDetails from './pages/jobs/JobDetails';
+
 
 // Защищенный маршрут
 const PrivateRoute = ({ children, allowedRoles }) => {
@@ -124,6 +127,8 @@ function App() {
         <Route path="/courses" element={<Courses />} />
         <Route path="/courses/:courseId" element={<CourseDetails />} />
         <Route path="/lessons/:courseId" element={<Lessons />} />
+        <Route path="/jobs" element={<JobsList />} />
+        <Route path="/jobs/:id" element={<JobDetails />} />
 
         {/* Маршруты для студента */}
         <Route

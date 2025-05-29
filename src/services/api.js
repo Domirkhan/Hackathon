@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { mockVacancies } from './mockData';
 
 const API_URL = 'http://localhost:5000/api';
 
@@ -60,49 +61,19 @@ export const authAPI = {
 // Методы для работы с вакансиями
 export const vacancyAPI = {
   getAll: async () => {
+    return mockVacancies;
+  },
+  
+  getById: async (id) => {
     try {
-      const response = await api.get('/vacancies');
-      return response.data.data;
+      const all = await vacancyAPI.getAll();
+      const vacancy = all.find(v => v._id === id);
+      if (!vacancy) throw new Error('Vacancy not found');
+      return vacancy;
     } catch (error) {
-      console.error('Ошибка при получении вакансий:', error);
-      return [];
+      console.error('Error getting vacancy:', error);
+      return null;
     }
-  },
-
-  getEmployerVacancies: async () => {
-    try {
-      const response = await api.get('/vacancies/employer');
-      return {
-        success: true,
-        data: response.data?.data || [],
-        message: response.data?.message
-      };
-    } catch (error) {
-      console.error('Ошибка при получении вакансий работодателя:', {
-        message: error.message,
-        response: error.response?.data
-      });
-      return {
-        success: false,
-        data: [],
-        message: error.response?.data?.message || 'Ошибка при получении вакансий'
-      };
-    }
-  },
-
-  create: async (vacancyData) => {
-    const response = await api.post('/vacancies', vacancyData);
-    return response.data.data;
-  },
-
-  update: async (id, vacancyData) => {
-    const response = await api.put(`/vacancies/${id}`, vacancyData);
-    return response.data.data;
-  },
-
-  delete: async (id) => {
-    const response = await api.delete(`/vacancies/${id}`);
-    return response.data;
   }
 };
 

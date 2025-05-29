@@ -46,7 +46,6 @@ function Header() {
                     <ul>
                         <li><Link to="/">Главная</Link></li>
                         <li><Link to="/jobs" className="nav-link">Вакансии</Link></li>
-                        <li><Link to="/internships" className="nav-link">Стажировки</Link></li>
                         <li><Link to="/lessons/:courseId">Курсы</Link></li>
                     </ul>
 
@@ -81,9 +80,9 @@ function Header() {
                     <div className={`mobile-nav ${isMenuOpen ? 'active' : ''}`}>
                         <ul>
                             <li><Link to="/" onClick={() => setIsMenuOpen(false)}>Главная</Link></li>
-                            <li><Link to="/test" onClick={() => setIsMenuOpen(false)}>Стажировка</Link></li>
-                            <li><Link to="/test" onClick={() => setIsMenuOpen(false)}>Вакансии</Link></li>
-                            <li><Link to="/lessons/:courseId" onClick={() => setIsMenuOpen(false)}>Курсы</Link></li>
+                            <li><Link to="/internships" onClick={() => setIsMenuOpen(false)}>Стажировки</Link></li>
+                            <li><Link to="/jobs" onClick={() => setIsMenuOpen(false)}>Вакансии</Link></li>
+                            <li><Link to="/courses" onClick={() => setIsMenuOpen(false)}>Курсы</Link></li>
                         </ul>
 
                         {user ? (
