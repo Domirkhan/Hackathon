@@ -35,7 +35,13 @@ function Register() {
     try {
       const response = await authAPI.register(formData);
       login(response.user, response.accessToken);
-      navigate('/');
+      
+      // Перенаправление в зависимости от роли
+      if (response.user.role === 'employer') {
+        navigate('/admin/jobs'); // Перенаправление на страницу управления вакансиями
+      } else {
+        navigate('/'); // Студенты идут на главную страницу
+      }
     } catch (err) {
       setError(err.response?.data?.message || 'Произошла ошибка при регистрации');
     } finally {
