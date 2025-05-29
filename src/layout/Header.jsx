@@ -32,7 +32,7 @@ function Header() {
                 <nav className="nav-menu">
                     <ul>
                         <li><Link to="/">Главная</Link></li>
-                        <li><Link to="/test">Тест</Link></li>
+                        <li><Link to="/test">Стажировки</Link></li>
                         <li><Link to="/vacancies">Вакансий</Link></li>
                     </ul>
                     <button className='login-button' onClick={handleLogin}>Войти</button>
@@ -49,7 +49,7 @@ function Header() {
                     <div className={`mobile-nav ${isMenuOpen ? 'active' : ''}`}>
                         <ul>
                             <li><Link to="/">Главная</Link></li>
-                            <li><Link to="/test">Тест</Link></li>
+                            <li><Link to="/test">Стажировки</Link></li>
                             <li><Link to="/vacancies">Вакансий</Link></li>
                         </ul>
                         <button className='mobile-login-button' onClick={handleLogin}>Войти</button>
