@@ -10,7 +10,9 @@ import Test from './components/main/Test';
 import Header from './layout/Header';
 import Footer from './layout/Footer';
 import Courses from './components/main/Courses';
-
+import CourseDetails from './components/courses/CourseDetails';
+import Lessons from './pages/Course/lessons';
+// Компоненты курсов```
 // Компоненты авторизации
 import Login from './auth/Login';
 import Register from './auth/Register';
@@ -23,6 +25,10 @@ import InternshipsManagement from './pages/admin/InternshipsManagement';
 // Компоненты дашбордов
 import StudentDashboard from './pages/student/StudentDashboard';
 import EmployerDashboard from './pages/dashboard/EmployerDashboard';
+import JobsList from './pages/jobs/JobsList';
+import JobDetails from './pages/jobs/JobDetails';
+import InternshipList from './components/InternshipList';
+import InternshipDetails from './components/InternshipDetails';
 
 // Защищенный маршрут
 const PrivateRoute = ({ children, allowedRoles }) => {
@@ -84,6 +90,14 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/courses" element={<Courses />} />
+        <Route path="/courses/:courseId" element={<CourseDetails />} />
+        <Route path="/lessons/:courseId" element={<Lessons />} />
+
+        {/* Маршруты вакансий */}
+        <Route path="/jobs" element={<JobsList />} />
+        <Route path="/jobs/:id" element={<JobDetails />} />
+        <Route path="/internships" element={<InternshipList />} />
+        <Route path="/internships/:id" element={<InternshipDetails />} />
 
         {/* Дашборд для студента */}
         <Route path="/dashboard" element={
