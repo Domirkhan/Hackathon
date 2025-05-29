@@ -31,16 +31,6 @@ function Register() {
               <input
                 type="radio"
                 name="role"
-                value="teacher"
-                checked={selectedRole === 'teacher'}
-                onChange={(e) => setSelectedRole(e.target.value)}
-              />
-              <span className="role-label">Преподаватель</span>
-            </label>
-            <label className="role-option">
-              <input
-                type="radio"
-                name="role"
                 value="employer"
                 checked={selectedRole === 'employer'}
                 onChange={(e) => setSelectedRole(e.target.value)}
