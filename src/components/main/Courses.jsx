@@ -11,7 +11,7 @@ const courses = [
     duration: '3 месяца',
     price: '75.000 ₸',
     students: 1200,
-    image: 'https://example.com/web-dev.jpg' // Добавьте свой путь к изображению
+    image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3'
   },
   {
     id: 2,
@@ -21,7 +21,7 @@ const courses = [
     duration: '2 месяца',
     price: '65.000 ₸',
     students: 850,
-    image: 'https://example.com/uiux.jpg'
+    image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-4.0.3'
   },
   {
     id: 3,
@@ -31,12 +31,13 @@ const courses = [
     duration: '4 месяца',
     price: '85.000 ₸',
     students: 650,
-    image: 'https://example.com/data-science.jpg'
+    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3'
   }
 ];
 
 function Courses() {
   return (
+    <section className="courses-section">
       <div className="courses-container">
         <div className="courses-header">
           <h2>Актуальные курсы</h2>
@@ -50,8 +51,10 @@ function Courses() {
                 <img src={course.image} alt={course.title} />
                 <span className="course-category">{course.category}</span>
               </div>
+              
               <div className="course-content">
                 <h3>{course.title}</h3>
+                
                 <div className="course-info">
                   <div className="info-item">
                     <FaClock />
@@ -66,6 +69,7 @@ function Courses() {
                     <span>{course.rating}</span>
                   </div>
                 </div>
+
                 <div className="course-footer">
                   <span className="course-price">{course.price}</span>
                   <button className="course-button">Подробнее</button>
@@ -75,6 +79,7 @@ function Courses() {
           ))}
         </div>
       </div>
+    </section>
   );
 }
 

@@ -22,14 +22,18 @@ function Header() {
         setIsMenuOpen(false);
     };
 
-    const handleLogout = () => {
-        logout();
+    const handleLogout = async () => {
+        await logout();
         navigate('/');
         setIsMenuOpen(false);
     };
 
     const handleProfile = () => {
-        navigate('/profile');
+        if (user?.role === 'employer') {
+            navigate('/admin/dashboard');
+        } else {
+            navigate('/student/dashboard');
+        }
         setIsMenuOpen(false);
     };
 
@@ -46,13 +50,17 @@ function Header() {
                     <ul>
                         <li><Link to="/">Главная</Link></li>
                         <li><Link to="/test">Тест</Link></li>
+                        <li><Link to="/courses">Курсы</Link></li>
                         {user?.role === 'student' && (
-                            <li><Link to="/vacancies">Вакансии</Link></li>
+                            <>
+                                <li><Link to="/vacancies">Вакансии</Link></li>
+                                <li><Link to="/internships">Стажировки</Link></li>
+                            </>
                         )}
                         {user?.role === 'employer' && (
                             <>
-                                <li><Link to="/my-vacancies">Мои вакансии</Link></li>
-                                <li><Link to="/applications">Отклики</Link></li>
+                                <li><Link to="/admin/jobs">Мои вакансии</Link></li>
+                                <li><Link to="/admin/internships">Мои стажировки</Link></li>
                             </>
                         )}
                     </ul>
@@ -68,10 +76,10 @@ function Header() {
                         </div>
                     ) : (
                         <div className="auth-buttons">
-                            <button className='login-button' onClick={handleLogin}>
+                            <button className="login-button" onClick={handleLogin}>
                                 Войти
                             </button>
-                            <button className='register-button' onClick={handleRegister}>
+                            <button className="register-button" onClick={handleRegister}>
                                 Регистрация
                             </button>
                         </div>
@@ -89,23 +97,31 @@ function Header() {
                         <ul>
                             <li><Link to="/" onClick={() => setIsMenuOpen(false)}>Главная</Link></li>
                             <li><Link to="/test" onClick={() => setIsMenuOpen(false)}>Тест</Link></li>
+                            <li><Link to="/courses" onClick={() => setIsMenuOpen(false)}>Курсы</Link></li>
                             {user?.role === 'student' && (
-                                <li>
-                                    <Link to="/vacancies" onClick={() => setIsMenuOpen(false)}>
-                                        Вакансии
-                                    </Link>
-                                </li>
+                                <>
+                                    <li>
+                                        <Link to="/vacancies" onClick={() => setIsMenuOpen(false)}>
+                                            Вакансии
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link to="/internships" onClick={() => setIsMenuOpen(false)}>
+                                            Стажировки
+                                        </Link>
+                                    </li>
+                                </>
                             )}
                             {user?.role === 'employer' && (
                                 <>
                                     <li>
-                                        <Link to="/my-vacancies" onClick={() => setIsMenuOpen(false)}>
+                                        <Link to="/admin/jobs" onClick={() => setIsMenuOpen(false)}>
                                             Мои вакансии
                                         </Link>
                                     </li>
                                     <li>
-                                        <Link to="/applications" onClick={() => setIsMenuOpen(false)}>
-                                            Отклики
+                                        <Link to="/admin/internships" onClick={() => setIsMenuOpen(false)}>
+                                            Мои стажировки
                                         </Link>
                                     </li>
                                 </>
@@ -114,19 +130,19 @@ function Header() {
 
                         {user ? (
                             <div className="mobile-user-controls">
-                                <button className='mobile-profile-button' onClick={handleProfile}>
+                                <button className="mobile-profile-button" onClick={handleProfile}>
                                     {user.nickname}
                                 </button>
-                                <button className='mobile-logout-button' onClick={handleLogout}>
+                                <button className="mobile-logout-button" onClick={handleLogout}>
                                     Выйти
                                 </button>
                             </div>
                         ) : (
                             <div className="mobile-auth-buttons">
-                                <button className='mobile-login-button' onClick={handleLogin}>
+                                <button className="mobile-login-button" onClick={handleLogin}>
                                     Войти
                                 </button>
-                                <button className='mobile-register-button' onClick={handleRegister}>
+                                <button className="mobile-register-button" onClick={handleRegister}>
                                     Регистрация
                                 </button>
                             </div>

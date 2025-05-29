@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from '../../services/api';
-import '../../styles/admin/JobsManagement.css';
+
 
 const JobsManagement = () => {
   const [vacancies, setVacancies] = useState([]);

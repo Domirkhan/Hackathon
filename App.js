@@ -1,6 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Course from './src/components/main/Courses';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, Link } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import './App.css';
 import './index.css';
@@ -11,25 +9,27 @@ import SearchMain from './components/main/SearchMain';
 import Test from './components/main/Test';
 import Header from './layout/Header';
 import Footer from './layout/Footer';
+import Courses from './components/main/Courses';
 
 // Компоненты авторизации
 import Login from './auth/Login';
 import Register from './auth/Register';
 import { AuthProvider } from './context/AuthContext';
-import Courses from './src/components/main/Courses';
-
-
 
 // Компоненты админ-панели
 import JobsManagement from './pages/admin/JobsManagement';
 import InternshipsManagement from './pages/admin/InternshipsManagement';
+
+// Компоненты дашбордов
+import StudentDashboard from './pages/student/dashboard/StudentDashboard';
+import EmployerDashboard from './pages/admin/EmployerDashboard';
 
 // Защищенный маршрут
 const PrivateRoute = ({ children, allowedRoles }) => {
   const { user, loading } = useAuth();
 
   if (loading) {
-    return <div>Загрузка...</div>;
+    return <div className="loading">Загрузка...</div>;
   }
 
   if (!user || (allowedRoles && !allowedRoles.includes(user.role))) {
@@ -47,10 +47,13 @@ const AdminLayout = ({ children }) => {
         <nav>
           <ul>
             <li>
-              <a href="/admin/jobs">Управление вакансиями</a>
+              <Link to="/admin/dashboard">Панель управления</Link>
             </li>
             <li>
-              <a href="/admin/internships">Управление стажировками</a>
+              <Link to="/admin/jobs">Управление вакансиями</Link>
+            </li>
+            <li>
+              <Link to="/admin/internships">Управление стажировками</Link>
             </li>
           </ul>
         </nav>
@@ -66,59 +69,71 @@ function App() {
   const { user } = useAuth();
 
   return (
-    <Router>
-      <div className="app">
-        <Header />
-        <Routes>
-          {/* Публичные маршруты */}
-          <Route path="/" element={
-            <main>
-              <SearchMain />
-              <Test />
-              <Review />
-              <Courses />
-            </main>
-          } />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/courses" element={<Courses />} />
+    <div className="app">
+      <Header />
+      <Routes>
+        {/* Публичные маршруты */}
+        <Route path="/" element={
+          <main>
+            <SearchMain />
+            <Test />
+            <Review />
+            <Courses />
+          </main>
+        } />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/courses" element={<Courses />} />
 
-          {/* Защищенные маршруты для работодателя */}
-          <Route path="/admin" element={
-            <PrivateRoute allowedRoles={['employer']}>
-              <AdminLayout />
-            </PrivateRoute>
-          }>
-            <Route path="jobs" element={
-              <PrivateRoute allowedRoles={['employer']}>
-                <JobsManagement />
-              </PrivateRoute>
-            } />
-            <Route path="internships" element={
-              <PrivateRoute allowedRoles={['employer']}>
-                <InternshipsManagement />
-              </PrivateRoute>
-            } />
-          </Route>
+        {/* Дашборд для студента */}
+        <Route path="/dashboard" element={
+          <PrivateRoute allowedRoles={['student']}>
+            <StudentDashboard />
+          </PrivateRoute>
+        } />
 
-          {/* Редирект с /admin на /admin/jobs */}
-          <Route path="/admin" element={
-            <Navigate to="/admin/jobs" replace />
-          } />
+        {/* Маршруты админ-панели для работодателя */}
+        <Route path="/admin" element={
+          <PrivateRoute allowedRoles={['employer']}>
+            <AdminLayout>
+              <Routes>
+                <Route path="dashboard" element={<EmployerDashboard />} />
+                <Route path="jobs" element={<JobsManagement />} />
+                <Route path="internships" element={<InternshipsManagement />} />
+              </Routes>
+            </AdminLayout>
+          </PrivateRoute>
+        } />
 
-          {/* Маршрут по умолчанию */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-        <Footer />
-      </div>
-    </Router>
+        {/* Редиректы */}
+        <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
+        <Route path="/dashboard" element={
+          user ? (
+            user.role === 'employer' ? (
+              <Navigate to="/admin/dashboard" replace />
+            ) : (
+              <Navigate to="/student/dashboard" replace />
+            )
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        } />
+
+        {/* Маршрут по умолчанию */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+      <Footer />
+    </div>
   );
 }
 
+// Обертка с провайдером авторизации
 export default function AppWrapper() {
   return (
-    <AuthProvider>
-      <App />
-    </AuthProvider>
+    <Router>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </Router>
   );
 }

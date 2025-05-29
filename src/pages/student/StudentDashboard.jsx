@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from '../../services/api';
-import '../../styles/dashboard/StudentDashboard.css';
+
 
 const StudentDashboard = () => {
   const [stats, setStats] = useState({

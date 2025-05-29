@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from '../../services/api';
-import '../../styles/dashboard/EmployerDashboard.css';
+import { api } from '../../services/api';
+
 
 const EmployerDashboard = () => {
   const [stats, setStats] = useState({
@@ -22,9 +22,9 @@ const EmployerDashboard = () => {
   const fetchDashboardData = async () => {
     try {
       const [vacanciesRes, applicationsRes, internshipsRes] = await Promise.all([
-        axios.get('/vacancies/employer'),
-        axios.get('/vacancies/employer/applications'),
-        axios.get('/internships/employer')
+        api.get('/vacancies/employer'),
+        api.get('/vacancies/employer/applications'),
+        api.get('/internships/employer')
       ]);
 
       setStats({
@@ -36,9 +36,9 @@ const EmployerDashboard = () => {
       });
 
       setRecentApplications(applicationsRes.data.data.slice(0, 5));
-      setLoading(false);
     } catch (error) {
       console.error('Ошибка загрузки данных:', error);
+    } finally {
       setLoading(false);
     }
   };
@@ -47,7 +47,7 @@ const EmployerDashboard = () => {
 
   return (
     <div className="employer-dashboard">
-      <h1>Панель управления работодателя</h1>
+      <h1>Панель управления</h1>
       
       <div className="stats-grid">
         <div className="stat-card">
