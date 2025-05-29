@@ -10,7 +10,9 @@ import Test from './components/main/Test';
 import Header from './layout/Header';
 import Footer from './layout/Footer';
 import Courses from './components/main/Courses';
-
+import CourseDetails from './components/courses/CourseDetails';
+import Lessons from './pages/Course/lessons';
+// Компоненты курсов```
 // Компоненты авторизации
 import Login from './auth/Login';
 import Register from './auth/Register';
@@ -120,6 +122,8 @@ function App() {
           } 
         />
         <Route path="/courses" element={<Courses />} />
+        <Route path="/courses/:courseId" element={<CourseDetails />} />
+        <Route path="/lessons/:courseId" element={<Lessons />} />
 
         {/* Маршруты для студента */}
         <Route
