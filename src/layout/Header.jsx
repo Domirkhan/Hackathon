@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import '../styles/layout/Header.css';
 
 function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const navigate = useNavigate();
+    const { user, logout } = useAuth();
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -17,6 +19,17 @@ function Header() {
 
     const handleRegister = () => {
         navigate('/register');
+        setIsMenuOpen(false);
+    };
+
+    const handleLogout = () => {
+        logout();
+        navigate('/');
+        setIsMenuOpen(false);
+    };
+
+    const handleProfile = () => {
+        navigate('/profile');
         setIsMenuOpen(false);
     };
 
@@ -33,10 +46,36 @@ function Header() {
                     <ul>
                         <li><Link to="/">Главная</Link></li>
                         <li><Link to="/test">Тест</Link></li>
-                        <li><Link to="/vacancies">Вакансий</Link></li>
+                        {user?.role === 'student' && (
+                            <li><Link to="/vacancies">Вакансии</Link></li>
+                        )}
+                        {user?.role === 'employer' && (
+                            <>
+                                <li><Link to="/my-vacancies">Мои вакансии</Link></li>
+                                <li><Link to="/applications">Отклики</Link></li>
+                            </>
+                        )}
                     </ul>
-                    <button className='login-button' onClick={handleLogin}>Войти</button>
-                    <button className='register-button' onClick={handleRegister}>Регистрация</button>
+
+                    {user ? (
+                        <div className="user-controls">
+                            <button className="profile-button" onClick={handleProfile}>
+                                {user.nickname}
+                            </button>
+                            <button className="logout-button" onClick={handleLogout}>
+                                Выйти
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="auth-buttons">
+                            <button className='login-button' onClick={handleLogin}>
+                                Войти
+                            </button>
+                            <button className='register-button' onClick={handleRegister}>
+                                Регистрация
+                            </button>
+                        </div>
+                    )}
                 </nav>
 
                 <div className="mobile-menu">
@@ -48,12 +87,50 @@ function Header() {
                     
                     <div className={`mobile-nav ${isMenuOpen ? 'active' : ''}`}>
                         <ul>
-                            <li><Link to="/">Главная</Link></li>
-                            <li><Link to="/test">Тест</Link></li>
-                            <li><Link to="/vacancies">Вакансий</Link></li>
+                            <li><Link to="/" onClick={() => setIsMenuOpen(false)}>Главная</Link></li>
+                            <li><Link to="/test" onClick={() => setIsMenuOpen(false)}>Тест</Link></li>
+                            {user?.role === 'student' && (
+                                <li>
+                                    <Link to="/vacancies" onClick={() => setIsMenuOpen(false)}>
+                                        Вакансии
+                                    </Link>
+                                </li>
+                            )}
+                            {user?.role === 'employer' && (
+                                <>
+                                    <li>
+                                        <Link to="/my-vacancies" onClick={() => setIsMenuOpen(false)}>
+                                            Мои вакансии
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link to="/applications" onClick={() => setIsMenuOpen(false)}>
+                                            Отклики
+                                        </Link>
+                                    </li>
+                                </>
+                            )}
                         </ul>
-                        <button className='mobile-login-button' onClick={handleLogin}>Войти</button>
-                        <button className='mobile-register-button' onClick={handleRegister}>Регистрация</button>
+
+                        {user ? (
+                            <div className="mobile-user-controls">
+                                <button className='mobile-profile-button' onClick={handleProfile}>
+                                    {user.nickname}
+                                </button>
+                                <button className='mobile-logout-button' onClick={handleLogout}>
+                                    Выйти
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="mobile-auth-buttons">
+                                <button className='mobile-login-button' onClick={handleLogin}>
+                                    Войти
+                                </button>
+                                <button className='mobile-register-button' onClick={handleRegister}>
+                                    Регистрация
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
