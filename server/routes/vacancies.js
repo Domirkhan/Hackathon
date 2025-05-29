@@ -5,7 +5,8 @@ import {
   getVacancy,
   updateVacancy,
   deleteVacancy,
-  getRecommendedVacancies
+  getRecommendedVacancies,
+  getEmployerVacancies
 } from '../controllers/vacancyController.js';
 import {
   createApplication,
@@ -27,9 +28,11 @@ router.get('/:id', getVacancy);
 router.use(auth);
 
 // Маршруты для работодателей
+
 router.post('/', roleCheck(['employer']), createVacancy);
 router.put('/:id', roleCheck(['employer']), updateVacancy);
 router.delete('/:id', roleCheck(['employer']), deleteVacancy);
+router.get('/employer', roleCheck(['employer']), getEmployerVacancies);
 router.get('/employer/applications', roleCheck(['employer']), getEmployerApplications);
 router.put('/applications/:id/status', roleCheck(['employer']), updateApplicationStatus);
 

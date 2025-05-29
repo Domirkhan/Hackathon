@@ -1,28 +1,17 @@
-
 import mongoose from 'mongoose';
 
 const vacancySchema = new mongoose.Schema({
   title: {
     type: String,
-    required: [true, 'Название вакансии обязательно'],
-    trim: true
-  },
-  description: {
-    type: String,
-    required: [true, 'Описание вакансии обязательно']
-  },
-  requirements: [{
-    type: String,
     required: true
-  }],
-  profession: {
-    type: String,
-    required: [true, 'Профессия обязательна'],
-    trim: true
   },
   employer: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
+    required: true
+  },
+  profession: {
+    type: String,
     required: true
   },
   salary: {
@@ -33,16 +22,20 @@ const vacancySchema = new mongoose.Schema({
       default: 'RUB'
     }
   },
+  workSchedule: String,
+  employmentType: String,
+  description: String,
+  requirements: [String],
+  location: String,
   status: {
     type: String,
     enum: ['active', 'closed'],
     default: 'active'
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
   }
-}, {
-  timestamps: true
 });
-
-// Индекс для поиска по профессии
-vacancySchema.index({ profession: 1 });
 
 export default mongoose.model('Vacancy', vacancySchema);

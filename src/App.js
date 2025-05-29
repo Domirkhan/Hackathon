@@ -22,7 +22,7 @@ import InternshipsManagement from './pages/admin/InternshipsManagement';
 
 // Компоненты дашбордов
 import StudentDashboard from './pages/student/StudentDashboard';
-import EmployerDashboard from './pages/dashboard/EmployerDashboard';
+import EmployerDashboard from './pages/admin/dashboard/EmployerDashboard';
 
 // Защищенный маршрут
 const PrivateRoute = ({ children, allowedRoles }) => {
@@ -68,56 +68,97 @@ const AdminLayout = ({ children }) => {
 function App() {
   const { user } = useAuth();
 
+  // Если пользователь авторизован, перенаправляем на соответствующий дашборд
+  const getHomeRedirect = () => {
+    if (user) {
+      return user.role === 'employer' ? (
+        <Navigate to="/admin/dashboard" replace />
+      ) : (
+        <Navigate to="/dashboard" replace />
+      );
+    }
+    return (
+      <main>
+        <SearchMain />
+        <Test />
+        <Review />
+        <Courses />
+      </main>
+    );
+  };
+
   return (
     <div className="app">
       <Header />
       <Routes>
         {/* Публичные маршруты */}
-        <Route path="/" element={
-          <main>
-            <SearchMain />
-            <Test />
-            <Review />
-            <Courses />
-          </main>
-        } />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/" element={getHomeRedirect()} />
+        <Route 
+          path="/login" 
+          element={
+            user ? (
+              <Navigate 
+                to={user.role === 'employer' ? '/admin/dashboard' : '/dashboard'} 
+                replace 
+              />
+            ) : (
+              <Login />
+            )
+          } 
+        />
+        <Route 
+          path="/register" 
+          element={
+            user ? (
+              <Navigate 
+                to={user.role === 'employer' ? '/admin/dashboard' : '/dashboard'} 
+                replace 
+              />
+            ) : (
+              <Register />
+            )
+          } 
+        />
         <Route path="/courses" element={<Courses />} />
 
-        {/* Дашборд для студента */}
-        <Route path="/dashboard" element={
-          <PrivateRoute allowedRoles={['student']}>
-            <StudentDashboard />
-          </PrivateRoute>
-        } />
+        {/* Маршруты для студента */}
+        <Route
+          path="/dashboard/*"
+          element={
+            <PrivateRoute allowedRoles={['student']}>
+              <StudentDashboard />
+            </PrivateRoute>
+          }
+        />
 
         {/* Маршруты админ-панели для работодателя */}
-        <Route path="/admin" element={
-          <PrivateRoute allowedRoles={['employer']}>
-            <AdminLayout>
-              <Routes>
-                <Route path="dashboard" element={<EmployerDashboard />} />
-                <Route path="jobs" element={<JobsManagement />} />
-                <Route path="internships" element={<InternshipsManagement />} />
-              </Routes>
-            </AdminLayout>
-          </PrivateRoute>
-        } />
+        <Route
+          path="/admin/*"
+          element={
+            <PrivateRoute allowedRoles={['employer']}>
+              <AdminLayout>
+                <Routes>
+                  <Route path="dashboard" element={<EmployerDashboard />} />
+                  <Route path="jobs" element={<JobsManagement />} />
+                  <Route path="internships" element={<InternshipsManagement />} />
+                  {/* Редирект на дашборд при пустом пути */}
+                  <Route path="" element={<Navigate to="dashboard" replace />} />
+                </Routes>
+              </AdminLayout>
+            </PrivateRoute>
+          }
+        />
 
         {/* Редиректы */}
-        <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
-        <Route path="/dashboard" element={
-          user ? (
-            user.role === 'employer' ? (
-              <Navigate to="/admin/dashboard" replace />
-            ) : (
-              <Navigate to="/student/dashboard" replace />
-            )
-          ) : (
-            <Navigate to="/login" replace />
-          )
-        } />
+        <Route
+          path="/dashboard"
+          element={
+            <Navigate
+              to={user?.role === 'employer' ? '/admin/dashboard' : '/dashboard'}
+              replace
+            />
+          }
+        />
 
         {/* Маршрут по умолчанию */}
         <Route path="*" element={<Navigate to="/" replace />} />

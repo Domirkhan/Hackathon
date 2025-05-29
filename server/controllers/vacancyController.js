@@ -22,6 +22,7 @@ export const createVacancy = async (req, res) => {
       data: vacancy
     });
   } catch (error) {
+    console.error('Ошибка при создании вакансии:', error);
     res.status(500).json({
       success: false,
       message: 'Ошибка при создании вакансии',
@@ -48,6 +49,11 @@ export const getVacancies = async (req, res) => {
       queryObject['salary.to'] = { $gte: Number(salary) };
     }
 
+    // Добавляем фильтр по активным вакансиям по умолчанию
+    if (!status) {
+      queryObject.status = 'active';
+    }
+
     const vacancies = await Vacancy.find(queryObject)
       .populate('employer', 'nickname')
       .sort(sort)
@@ -59,6 +65,7 @@ export const getVacancies = async (req, res) => {
       data: vacancies
     });
   } catch (error) {
+    console.error('Ошибка при получении вакансий:', error);
     res.status(500).json({
       success: false,
       message: 'Ошибка при получении вакансий',
@@ -67,29 +74,39 @@ export const getVacancies = async (req, res) => {
   }
 };
 
-// Получение рекомендованных вакансий для студента
-export const getRecommendedVacancies = async (req, res) => {
+// Получение вакансий работодателя
+export const getEmployerVacancies = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
-    
-    const vacancies = await Vacancy.find({
-      profession: new RegExp(user.profession, 'i'),
-      status: 'active'
-    })
-    .populate('employer', 'nickname')
-    .sort('-createdAt')
-    .limit(10)
-    .lean();
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({
+        success: false,
+        data: [],
+        message: 'Пользователь не авторизован'
+      });
+    }
 
-    res.json({
+    const vacancies = await Vacancy.find({ employer: req.user.id })
+      .sort({ createdAt: -1 })
+      .lean() || [];
+
+    return res.status(200).json({
       success: true,
+      data: vacancies,
       count: vacancies.length,
-      data: vacancies
+      message: vacancies.length ? 'Вакансии успешно получены' : 'Вакансии не найдены'
     });
+
   } catch (error) {
-    res.status(500).json({
+    console.error('Ошибка в getEmployerVacancies:', {
+      error: error.message,
+      userId: req.user?.id,
+      stack: error.stack
+    });
+    
+    return res.status(500).json({
       success: false,
-      message: 'Ошибка при получении рекомендаций',
+      data: [],
+      message: 'Ошибка при получении вакансий',
       error: error.message
     });
   }
@@ -114,6 +131,7 @@ export const getVacancy = async (req, res) => {
       data: vacancy
     });
   } catch (error) {
+    console.error('Ошибка при получении вакансии:', error);
     res.status(500).json({
       success: false,
       message: 'Ошибка при получении вакансии',
@@ -125,7 +143,7 @@ export const getVacancy = async (req, res) => {
 // Обновление вакансии
 export const updateVacancy = async (req, res) => {
   try {
-    let vacancy = await Vacancy.findById(req.params.id);
+    const vacancy = await Vacancy.findById(req.params.id);
 
     if (!vacancy) {
       return res.status(404).json({
@@ -134,7 +152,6 @@ export const updateVacancy = async (req, res) => {
       });
     }
 
-    // Проверка прав на редактирование
     if (vacancy.employer.toString() !== req.user.id) {
       return res.status(403).json({
         success: false,
@@ -142,7 +159,7 @@ export const updateVacancy = async (req, res) => {
       });
     }
 
-    vacancy = await Vacancy.findByIdAndUpdate(
+    const updatedVacancy = await Vacancy.findByIdAndUpdate(
       req.params.id,
       req.body,
       { new: true, runValidators: true }
@@ -150,9 +167,10 @@ export const updateVacancy = async (req, res) => {
 
     res.json({
       success: true,
-      data: vacancy
+      data: updatedVacancy
     });
   } catch (error) {
+    console.error('Ошибка при обновлении вакансии:', error);
     res.status(500).json({
       success: false,
       message: 'Ошибка при обновлении вакансии',
@@ -189,10 +207,57 @@ export const deleteVacancy = async (req, res) => {
       message: 'Вакансия успешно удалена'
     });
   } catch (error) {
+    console.error('Ошибка при удалении вакансии:', error);
     res.status(500).json({
       success: false,
       message: 'Ошибка при удалении вакансии',
       error: error.message
     });
   }
+};
+
+// Получение рекомендованных вакансий для студента
+export const getRecommendedVacancies = async (req, res) => {
+  try {
+    if (req.user.role !== 'student') {
+      return res.status(403).json({
+        success: false,
+        message: 'Доступ запрещен'
+      });
+    }
+
+    const user = await User.findById(req.user.id);
+    
+    const vacancies = await Vacancy.find({
+      profession: new RegExp(user.profession || '', 'i'),
+      status: 'active'
+    })
+    .populate('employer', 'nickname')
+    .sort('-createdAt')
+    .limit(10)
+    .lean();
+
+    res.json({
+      success: true,
+      count: vacancies.length,
+      data: vacancies
+    });
+  } catch (error) {
+    console.error('Ошибка при получении рекомендаций:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Ошибка при получении рекомендаций',
+      error: error.message
+    });
+  }
+};
+
+export {
+  createVacancy,
+  getVacancies, 
+  getEmployerVacancies,
+  getVacancy,
+  updateVacancy, 
+  deleteVacancy,
+  getRecommendedVacancies
 };

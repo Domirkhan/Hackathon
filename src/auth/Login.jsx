@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { authAPI } from '../services/api';
@@ -29,8 +29,12 @@ function Login() {
 
     try {
       const response = await authAPI.login(formData);
-      login(response.user, response.accessToken);
-      navigate('/');
+      if (response?.user && response?.accessToken) {
+        login(response.user, response.accessToken);
+        navigate(response.user.role === 'employer' ? '/admin/dashboard' : '/dashboard');
+      } else {
+        throw new Error('Некорректный ответ от сервера');
+      }
     } catch (err) {
       setError(err.response?.data?.message || 'Произошла ошибка при входе');
     } finally {
