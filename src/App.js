@@ -8,9 +8,10 @@ import Header from './layout/Header';
 import Footer from './layout/Footer';
 import Login from './auth/Login';
 import Register from './auth/Register';
-
+import { AuthProvider } from './context/AuthContext';
 function App() {
   return (
+    <AuthProvider>
     <Router>
       <div className="app">
         <Header />
@@ -28,6 +29,7 @@ function App() {
         <Footer />
       </div>
     </Router>
+    </AuthProvider>
   );
 }
 
