@@ -4,8 +4,15 @@ import { BsPeople } from 'react-icons/bs';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { BiTime } from 'react-icons/bi';
 import { MdOutlineFreeBreakfast, MdWorkOutline } from 'react-icons/md';
+import { useNavigate } from 'react-router-dom';
+
 
 function Test() {
+  const navigate = useNavigate();
+
+  const handleStartTest = () => {
+    navigate('/testing');
+  };
   return (
     <div className="test-container">
       <div className="test-content">
@@ -56,7 +63,9 @@ function Test() {
           </div>
         </div>
 
-        <button className="test-button">Пройти тест</button>
+      <button className="test-button" onClick={handleStartTest}>
+      Пройти тест
+      </button>
       </div>
     </div>
   );

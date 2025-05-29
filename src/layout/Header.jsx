@@ -45,16 +45,9 @@ function Header() {
                 <nav className="nav-menu">
                     <ul>
                         <li><Link to="/">Главная</Link></li>
-                        <li><Link to="/test">Тест</Link></li>
-                        {user?.role === 'student' && (
-                            <li><Link to="/vacancies">Вакансии</Link></li>
-                        )}
-                        {user?.role === 'employer' && (
-                            <>
-                                <li><Link to="/my-vacancies">Мои вакансии</Link></li>
-                                <li><Link to="/applications">Отклики</Link></li>
-                            </>
-                        )}
+                        <li><Link to="/test">Стажировка</Link></li>
+                        <li><Link to="/test">Вакансии</Link></li>
+                        <li><Link to="/test">Курсы</Link></li>
                     </ul>
 
                     {user ? (
@@ -88,28 +81,9 @@ function Header() {
                     <div className={`mobile-nav ${isMenuOpen ? 'active' : ''}`}>
                         <ul>
                             <li><Link to="/" onClick={() => setIsMenuOpen(false)}>Главная</Link></li>
-                            <li><Link to="/test" onClick={() => setIsMenuOpen(false)}>Тест</Link></li>
-                            {user?.role === 'student' && (
-                                <li>
-                                    <Link to="/vacancies" onClick={() => setIsMenuOpen(false)}>
-                                        Вакансии
-                                    </Link>
-                                </li>
-                            )}
-                            {user?.role === 'employer' && (
-                                <>
-                                    <li>
-                                        <Link to="/my-vacancies" onClick={() => setIsMenuOpen(false)}>
-                                            Мои вакансии
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link to="/applications" onClick={() => setIsMenuOpen(false)}>
-                                            Отклики
-                                        </Link>
-                                    </li>
-                                </>
-                            )}
+                            <li><Link to="/test" onClick={() => setIsMenuOpen(false)}>Стажировка</Link></li>
+                            <li><Link to="/test" onClick={() => setIsMenuOpen(false)}>Вакансии</Link></li>
+                            <li><Link to="/test" onClick={() => setIsMenuOpen(false)}>Курсы</Link></li>
                         </ul>
 
                         {user ? (

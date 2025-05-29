@@ -176,6 +176,10 @@
 .mobile-nav a:hover {
   color: #4fa6dc;
 }
+.auth-buttons {
+  display: flex;
+  gap: 1rem;
+}
 @media (max-width: 768px) {
 .nav-menu {
     display: none; /* Скрываем основное меню */

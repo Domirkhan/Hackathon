@@ -9,6 +9,8 @@ import Footer from './layout/Footer';
 import Login from './auth/Login';
 import Register from './auth/Register';
 import { AuthProvider } from './context/AuthContext';
+import Testing from './components/Test/Testing';
+
 function App() {
   return (
     <AuthProvider>
@@ -25,6 +27,7 @@ function App() {
           } />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/testing" element={<Testing />} />
         </Routes>
         <Footer />
       </div>
