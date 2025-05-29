@@ -7,10 +7,11 @@ export const api = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json'
-  }
+  },
+  withCredentials: true // Важно для работы с куками
 });
 
-// Добавляем перехватчик запросов для токена
+// Перехватчик для добавления токена
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -103,6 +104,18 @@ export const vacancyAPI = {
   delete: async (id) => {
     const response = await api.delete(`/vacancies/${id}`);
     return response.data;
+  },
+  getRecommendedVacancies: async () => {
+    try {
+      const response = await api.get('/vacancies/recommended');
+      if (!response.data.success) {
+        throw new Error(response.data.message);
+      }
+      return response.data;
+    } catch (error) {
+      console.error('Ошибка при получении рекомендаций:', error);
+      throw error;
+    }
   }
 };
 
@@ -188,6 +201,9 @@ export const employerAPI = {
   getDashboardStats: async () => {
     try {
       const response = await api.get('/employer/stats');
+      if (!response.data.success) {
+        throw new Error(response.data.message);
+      }
       return response.data;
     } catch (error) {
       console.error('Ошибка при получении статистики:', error);
@@ -198,6 +214,9 @@ export const employerAPI = {
   getRecentApplications: async () => {
     try {
       const response = await api.get('/employer/applications');
+      if (!response.data.success) {
+        throw new Error(response.data.message);
+      }
       return response.data;
     } catch (error) {
       console.error('Ошибка при получении откликов:', error);
@@ -205,15 +224,45 @@ export const employerAPI = {
     }
   },
 
-  updateApplicationView: async (applicationId) => {
+  updateApplicationStatus: async (applicationId, status) => {
     try {
-      const response = await api.put(`/employer/applications/${applicationId}/view`);
+      const response = await api.put(`/employer/applications/${applicationId}`, { status });
+      if (!response.data.success) {
+        throw new Error(response.data.message);
+      }
       return response.data;
     } catch (error) {
-      console.error('Ошибка при обновлении статуса просмотра:', error);
+      console.error('Ошибка при обновлении статуса:', error);
       throw error;
     }
   }
 };
 
+export const studentAPI = {
+  getStats: async () => {
+    try {
+      const response = await api.get('/student/stats');
+      if (!response.data.success) {
+        throw new Error(response.data.message);
+      }
+      return response.data;
+    } catch (error) {
+      console.error('Ошибка при получении статистики:', error);
+      throw error;
+    }
+  },
+
+  getApplications: async () => {
+    try {
+      const response = await api.get('/vacancies/student/applications');
+      if (!response.data.success) {
+        throw new Error(response.data.message);
+      }
+      return response.data;
+    } catch (error) {
+      console.error('Ошибка при получении откликов:', error);
+      throw error;
+    }
+  }
+};
 export default api;

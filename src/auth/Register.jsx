@@ -28,20 +28,24 @@ function Register() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
+  e.preventDefault();
+  setError('');
+  setLoading(true);
 
-    try {
-      const response = await authAPI.register(formData);
+  try {
+    const response = await authAPI.register(formData);
+    if (response?.user && response?.accessToken) {
       login(response.user, response.accessToken);
-      navigate('/');
-    } catch (err) {
-      setError(err.response?.data?.message || 'Произошла ошибка при регистрации');
-    } finally {
-      setLoading(false);
+      navigate('/'); // Редирект на главную после успешной регистрации
+    } else {
+      throw new Error('Некорректный ответ от сервера');
     }
-  };
+  } catch (err) {
+    setError(err.response?.data?.message || 'Произошла ошибка при регистрации');
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="register-container">

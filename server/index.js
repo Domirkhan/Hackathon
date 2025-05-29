@@ -54,7 +54,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/vacancies', vacancyRoutes);
 app.use('/api/employer', employerRoutes);
-app.use('/api/internships', internshipRoutes); // Добавить маршруты стажировок
+app.use('/api/internships', internshipRoutes); 
 
 // Error Handler
 app.use(errorHandler);

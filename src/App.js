@@ -71,14 +71,9 @@ function App() {
   const { user } = useAuth();
 
   // Если пользователь авторизован, перенаправляем на соответствующий дашборд
-  const getHomeRedirect = () => {
-    if (user) {
-      return user.role === 'employer' ? (
-        <Navigate to="/admin/dashboard" replace />
-      ) : (
-        <Navigate to="/dashboard" replace />
-      );
-    }
+  
+
+ const getHomeRedirect = () => {
     return (
       <main>
         <SearchMain />
@@ -99,10 +94,7 @@ function App() {
           path="/login" 
           element={
             user ? (
-              <Navigate 
-                to={user.role === 'employer' ? '/admin/dashboard' : '/dashboard'} 
-                replace 
-              />
+              <Navigate to="/" replace /> // Меняем редирект на главную
             ) : (
               <Login />
             )
@@ -112,10 +104,7 @@ function App() {
           path="/register" 
           element={
             user ? (
-              <Navigate 
-                to={user.role === 'employer' ? '/admin/dashboard' : '/dashboard'} 
-                replace 
-              />
+              <Navigate to="/" replace /> // Меняем редирект на главную
             ) : (
               <Register />
             )

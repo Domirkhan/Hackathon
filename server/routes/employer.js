@@ -9,12 +9,13 @@ import roleCheck from '../middleware/roleCheck.js';
 
 const router = express.Router();
 
+// Защита маршрутов
 router.use(auth);
 router.use(roleCheck(['employer']));
 
-// Dashboard маршруты
-router.route('/stats').get(getDashboardStats);
-router.route('/applications').get(getRecentApplications);
-router.route('/applications/:applicationId/view').put(updateApplicationView);
+// Маршруты
+router.get('/stats', getDashboardStats);
+router.get('/applications', getRecentApplications);
+router.put('/applications/:applicationId/view', updateApplicationView);
 
 export default router;

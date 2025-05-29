@@ -161,3 +161,70 @@
     font-size: 0.875rem;
   }
 }
+
+
+
+/* Добавьте эти стили к существующим */
+
+.student-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.student-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.stat-icon {
+  color: #1B4965;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.vacancies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.vacancy-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.vacancy-header h3 {
+  color: #1B4965;
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+
+.salary {
+  font-weight: 600;
+  color: #2d3748;
+  margin: 0.5rem 0;
+}
+
+.location {
+  color: #718096;
+  font-size: 0.875rem;
+}
+
+.view-vacancy-btn {
+  display: inline-block;
+  color: #1B4965;
+  text-decoration: none;
+  font-size: 0.875rem;
+  margin-top: 1rem;
+}
+
+.view-vacancy-btn:hover {
+  text-decoration: underline;
+}

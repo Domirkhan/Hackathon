@@ -22,25 +22,25 @@ function Login() {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  setError('');
+  setLoading(true);
 
-    try {
-      const response = await authAPI.login(formData);
-      if (response?.user && response?.accessToken) {
-        login(response.user, response.accessToken);
-        navigate(response.user.role === 'employer' ? '/admin/dashboard' : '/dashboard');
-      } else {
-        throw new Error('Некорректный ответ от сервера');
-      }
-    } catch (err) {
-      setError(err.response?.data?.message || 'Произошла ошибка при входе');
-    } finally {
-      setLoading(false);
+  try {
+    const response = await authAPI.login(formData);
+    if (response?.user && response?.accessToken) {
+      login(response.user, response.accessToken);
+      navigate('/'); // Редирект на главную после успешного входа
+    } else {
+      throw new Error('Некорректный ответ от сервера');
     }
-  };
+  } catch (err) {
+    setError(err.response?.data?.message || 'Произошла ошибка при входе');
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="login-container">
