@@ -84,6 +84,7 @@
   font-size: 20px;
   font-weight: 600;
   color: #1B4965;
+  margin-bottom: 0;
 }
 
 .job-company {
@@ -100,7 +101,7 @@
 }
 
 .job-salary {
-  color: #1B4965;
+  color: #d5132a;
   font-weight: 600;
   font-size: 18px;
 }

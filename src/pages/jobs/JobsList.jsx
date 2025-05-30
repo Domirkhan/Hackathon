@@ -191,7 +191,6 @@ const fetchVacancies = async (params = {}) => {
                             </div>
                             <div className="job-info">
                                 <span className="job-salary">
-                                    <FaMoneyBillWave />
                                     {vacancy.salary?.from} - {vacancy.salary?.to} {vacancy.salary?.currency}
                                 </span>
                             </div>
