@@ -1,123 +1,144 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { vacancyAPI } from '../../services/api';
+import { FaMapMarkerAlt, FaBriefcase, FaMoneyBillWave, FaBuilding, FaClock, FaEnvelope, FaPhone } from 'react-icons/fa';
 import ApplicationForm from './ApplicationForm';
 import '../../styles/jobs/JobDetails.css';
-import '../../styles/jobs/JobsList.css'
+
 const JobDetails = () => {
-  const { id } = useParams();
-  const [vacancy, setVacancy] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [showApplicationForm, setShowApplicationForm] = useState(false);
+    const { id } = useParams();
+    const navigate = useNavigate();
+    const [vacancy, setVacancy] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [showApplicationForm, setShowApplicationForm] = useState(false);
 
-  useEffect(() => {
-    const fetchVacancy = async () => {
-      try {
-        const data = await vacancyAPI.getById(id);
-        setVacancy(data);
-      } catch (error) {
-        console.error('Error fetching vacancy:', error);
-      }
-      setLoading(false);
-    };
-    fetchVacancy();
-  }, [id]);
+    useEffect(() => {
+        const fetchVacancyDetails = async () => {
+            try {
+                setLoading(true);
+                const response = await vacancyAPI.getById(id);
+                
+                if (response.success) {
+                    setVacancy(response.data);
+                } else {
+                    setError('Не удалось загрузить информацию о вакансии');
+                }
+            } catch (err) {
+                setError('Произошла ошибка при загрузке данных');
+                console.error('Error fetching vacancy:', err);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-  if (loading) return <div className="loading-container"><div className="loading-spinner"></div></div>;
-  if (!vacancy) return <div className="error-container">Вакансия не найдена</div>;
+        if (id) {
+            fetchVacancyDetails();
+        }
+    }, [id]);
 
-  return (
-    <div className="job-details-container">
-      <Link to="/jobs" className="back-link">
-        <i className="fas fa-arrow-left"></i> Назад к списку вакансий
-      </Link>
-      
-      <div className="job-header">
-        <div className="job-header-main">
-          <h1>{vacancy.title}</h1>
-          <div className="company-info">
-            <img src={vacancy.employer?.logo || '/default-company-logo.png'} alt="company logo" />
-            <div>
-              <h2>{vacancy.employer?.nickname}</h2>
-              <p className="location"><i className="fas fa-map-marker-alt"></i> {vacancy.location}</p>
+    if (loading) {
+        return (
+            <div className="loading-container">
+                <div className="loader"></div>
+                <p>Загрузка данных...</p>
             </div>
-          </div>
-        </div>
-        <div className="job-header-side">
-          <div className="salary-badge">
-            {vacancy.salary?.from} - {vacancy.salary?.to} {vacancy.salary?.currency}
-          </div>
-          <div className="employment-badge">
-            {vacancy.employmentType}
-          </div>
-        </div>
-      </div>
+        );
+    }
 
-      <div className="job-content">
-        <div className="job-main">
-          <section className="job-section">
-            <h3>Описание вакансии</h3>
-            <div className="section-content">
-              {vacancy.description}
+    if (error || !vacancy) {
+        return (
+            <div className="error-container">
+                <p>{error || 'Вакансия не найдена'}</p>
+                <button onClick={() => navigate('/jobs')} className="back-button">
+                    Вернуться к списку вакансий
+                </button>
             </div>
-          </section>
+        );
+    }
 
-          <section className="job-section">
-            <h3>Требования</h3>
-            <div className="section-content requirements-list">
-              {vacancy.requirements?.map((req, index) => (
-                <div key={index} className="requirement-item">
-                  <i className="fas fa-check"></i>
-                  <span>{req}</span>
+    return (
+        <div className="job-details-container">
+            <div className="job-details-content">
+                <Link to="/jobs" className="back-link">
+                    <FaBriefcase /> Назад к списку вакансий
+                </Link>
+
+                <div className="job-header">
+                    <div className="job-header-main">
+                        <h1>{vacancy.title}</h1>
+                    </div>
+                    <div className="job-header-side">
+                        <div className="salary-info">
+                            <FaMoneyBillWave />
+                            <span>{vacancy.salary?.from} - {vacancy.salary?.to} {vacancy.salary?.currency}</span>
+                        </div>
+                        <div className="employment-type">
+                            <FaBriefcase />
+                            <span>{vacancy.employmentType}</span>
+                        </div>
+                    </div>
                 </div>
-              ))}
-            </div>
-          </section>
 
-          <section className="job-section">
-            <h3>Условия работы</h3>
-            <div className="section-content conditions-list">
-              <div className="condition-item">
-                <i className="fas fa-clock"></i>
-                <span>{vacancy.workSchedule}</span>
-              </div>
-              <div className="condition-item">
-                <i className="fas fa-building"></i>
-                <span>Офис в {vacancy.location}</span>
-              </div>
-              {/* Добавьте другие условия работы */}
-            </div>
-          </section>
-        </div>
+                <div className="job-content">
+                    <div className="job-main">
+                        <section className="job-section">
+                            <h3>Описание вакансии</h3>
+                            <div className="section-content">
+                                {vacancy.description}
+                            </div>
+                        </section>
 
-        <div className="job-sidebar">
-          <div className="application-card">
-            <h3>Заинтересовала вакансия?</h3>
-            <button 
-              className="apply-button"
-              onClick={() => setShowApplicationForm(true)}
-            >
-              Откликнуться
-            </button>
-            <div className="contact-info">
-              <h4>Контактная информация</h4>
-              <p><i className="fas fa-envelope"></i> {vacancy.employer?.email}</p>
-              <p><i className="fas fa-phone"></i> {vacancy.employer?.phone}</p>
-            </div>
-          </div>
-        </div>
-      </div>
+                        {vacancy.requirements?.length > 0 && (
+                            <section className="job-section">
+                                <h3>Требования</h3>
+                                <ul className="requirements-list">
+                                    {vacancy.requirements.map((req, index) => (
+                                        <li key={index}>
+                                            <span className="bullet">•</span>
+                                            {req}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </section>
+                        )}
+                    </div>
 
-      {showApplicationForm && (
-        <div className="modal-overlay">
-          <ApplicationForm 
-            vacancyId={id}
-            onClose={() => setShowApplicationForm(false)}
-          />
+                    <div className="job-sidebar">
+                        <div className="application-card">
+                            <h3>Заинтересовала вакансия?</h3>
+                            <button 
+                                className="apply-button"
+                                onClick={() => setShowApplicationForm(true)}
+                            >
+                                Откликнуться
+                            </button>
+                            {vacancy.employer && (
+                                <div className="contact-info">
+                                    <h4>Контактная информация</h4>
+                                    {vacancy.employer.email && (
+                                        <p><FaEnvelope /> {vacancy.employer.email}</p>
+                                    )}
+                                    {vacancy.employer.phone && (
+                                        <p><FaPhone /> {vacancy.employer.phone}</p>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+
+                {showApplicationForm && (
+                    <div className="modal-overlay">
+                        <ApplicationForm 
+                            vacancyId={id}
+                            onClose={() => setShowApplicationForm(false)}
+                        />
+                    </div>
+                )}
+            </div>
         </div>
-      )}
-    </div>
-  );
+    );
 };
 
 export default JobDetails;

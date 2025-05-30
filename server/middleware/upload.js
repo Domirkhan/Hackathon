@@ -23,7 +23,7 @@ const createUploadDirs = () => {
 
 createUploadDirs();
 
-// Конфигурация хранилища
+// Конфигурация хранилища для аватаров и резюме
 const storage = {
   avatar: multer.diskStorage({
     destination: (req, file, cb) => {
@@ -51,9 +51,8 @@ const storage = {
 // Фильтры файлов
 const fileFilter = {
   avatar: (req, file, cb) => {
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-    if (!allowedTypes.includes(file.mimetype)) {
-      return cb(new Error('Разрешены только изображения форматов JPEG, PNG и GIF'), false);
+    if (!['image/jpeg', 'image/png', 'image/jpg'].includes(file.mimetype)) {
+      return cb(new Error('Разрешены только изображения формата JPG, JPEG или PNG'), false);
     }
     cb(null, true);
   },
@@ -66,7 +65,7 @@ const fileFilter = {
   }
 };
 
-// Настройки лимитов
+// Настройки лимитов размера файлов
 const limits = {
   avatar: {
     fileSize: 5 * 1024 * 1024 // 5MB
@@ -76,23 +75,19 @@ const limits = {
   }
 };
 
-// Конфигурация мультера
-const avatarUpload = multer({
-  storage: storage.avatar,
-  fileFilter: fileFilter.avatar,
-  limits: limits.avatar
-});
-
-const resumeUpload = multer({
-  storage: storage.resume,
-  fileFilter: fileFilter.resume,
-  limits: limits.resume
-});
-
-// Экспорт конфигураций загрузки
+// Создание экземпляров multer для разных типов файлов
 export const upload = {
-  avatar: avatarUpload,
-  resume: resumeUpload
+  avatar: multer({
+    storage: storage.avatar,
+    fileFilter: fileFilter.avatar,
+    limits: limits.avatar
+  }),
+  
+  resume: multer({
+    storage: storage.resume,
+    fileFilter: fileFilter.resume,
+    limits: limits.resume
+  })
 };
 
 // Middleware обработки ошибок загрузки

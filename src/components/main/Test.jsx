@@ -1,18 +1,18 @@
+import { useNavigate } from 'react-router-dom';
 import '../../styles/main/Test.css';
 import { BiMoney } from 'react-icons/bi';
 import { BsPeople } from 'react-icons/bs';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { BiTime } from 'react-icons/bi';
 import { MdOutlineFreeBreakfast, MdWorkOutline } from 'react-icons/md';
-import { useNavigate } from 'react-router-dom';
-
 
 function Test() {
   const navigate = useNavigate();
 
   const handleStartTest = () => {
-    navigate('/testing');
+    navigate('/testing'); // Убедитесь, что этот путь соответствует вашему роуту
   };
+
   return (
     <div className="test-container">
       <div className="test-content">
@@ -63,9 +63,13 @@ function Test() {
           </div>
         </div>
 
-      <button className="test-button" onClick={handleStartTest}>
-      Пройти тест
-      </button>
+        <button 
+          type="button"
+          className="test-button" 
+          onClick={handleStartTest}
+        >
+          Пройти тест
+        </button>
       </div>
     </div>
   );

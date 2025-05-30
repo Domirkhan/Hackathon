@@ -1,5 +1,6 @@
 import User from '../model/User.js';
-
+import path from 'path';
+import fs from 'fs/promises';
 // Получение профиля пользователя
 export const getProfile = async (req, res) => {
   try {
@@ -144,6 +145,46 @@ export const getStudentProfile = async (req, res) => {
     res.status(500).json({
       success: false,
       message: error.message
+    });
+  }
+};
+
+export const uploadAvatar = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: 'Файл не загружен'
+      });
+    }
+
+    const user = await User.findById(req.user.id);
+    
+    // Удаляем старый аватар если есть
+    if (user.avatar) {
+      const oldPath = path.join(process.cwd(), 'uploads', user.avatar.replace(/^\/uploads/, ''));
+      try {
+        await fs.unlink(oldPath);
+      } catch (err) {
+        console.error('Ошибка при удалении старого аватара:', err);
+      }
+    }
+
+    // Сохраняем путь к новому файлу
+    user.avatar = `/uploads/avatars/${req.file.filename}`;
+    await user.save();
+
+    res.json({
+      success: true,
+      data: {
+        avatar: user.avatar
+      }
+    });
+  } catch (error) {
+    console.error('Ошибка при загрузке аватара:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Ошибка при загрузке аватара'
     });
   }
 };

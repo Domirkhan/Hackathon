@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { FaUser, FaUserCircle, FaSignOutAlt } from 'react-icons/fa';
 import '../styles/layout/Header.css';
-
-
+import logo from '../image/logo.jpg'; // Assuming you have a logo image
 function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -35,37 +35,57 @@ function Header() {
         setIsDropdownOpen(false);
     };
 
-    return (
+    const handleProfileClick = () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/login');
+      return;
+    }
+    navigate('/profile');
+    setIsDropdownOpen(false);
+  };
+return (
         <header className="header">
             <div className="header-content">
                 <div className="logo">
                     <Link to="/" className="logo-link">
+                        <img src={logo} alt="ProfJob Logo" className="logo-image" />
                         <h2>ProfJob</h2>
                     </Link>
                 </div>
                 
-                <nav className="nav-menu">
+               <nav className="nav-menu">
                     <ul>
                         <li><Link to="/">Главная</Link></li>
                         <li><Link to="/jobs" className="nav-link">Вакансии</Link></li>
-                        <li><Link to="/lessons/:courseId">Курсы</Link></li>
+                        <li><Link to="/courses">Курсы</Link></li>
                     </ul>
 
                     {user ? (
                         <div className="user-controls">
-                            <button className="profile-button" onClick={handleProfile}>
-                                {user.nickname}
-                            </button>
-                            <button className="logout-button" onClick={handleLogout}>
-                                Выйти
-                            </button>
+                            <div className="user-info" onClick={toggleDropdown}>
+                                <FaUser className="user-icon" />
+                                <span className="user-name">{user.nickname}</span>
+                                {isDropdownOpen && (
+                                    <div className="user-dropdown">
+                                       <div className="dropdown-item" onClick={handleProfileClick}>
+                                            <FaUserCircle />
+                                            Профиль
+                                        </div>
+                                        <button onClick={handleLogout} className="dropdown-item">
+                                            <FaSignOutAlt />
+                                            Выйти
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     ) : (
                         <div className="auth-buttons">
-                            <button className='login-button' onClick={handleLogin}>
+                            <button className="login-button" onClick={() => navigate('/login')}>
                                 Войти
                             </button>
-                            <button className='register-button' onClick={handleRegister}>
+                            <button className="register-button" onClick={() => navigate('/register')}>
                                 Регистрация
                             </button>
                         </div>
@@ -82,7 +102,6 @@ function Header() {
                     <div className={`mobile-nav ${isMenuOpen ? 'active' : ''}`}>
                         <ul>
                             <li><Link to="/" onClick={() => setIsMenuOpen(false)}>Главная</Link></li>
-                            <li><Link to="/internships" onClick={() => setIsMenuOpen(false)}>Стажировки</Link></li>
                             <li><Link to="/jobs" onClick={() => setIsMenuOpen(false)}>Вакансии</Link></li>
                             <li><Link to="/courses" onClick={() => setIsMenuOpen(false)}>Курсы</Link></li>
                         </ul>

@@ -26,7 +26,7 @@ const courses = [
 	},
 	{
 		id: 'data-science',
-		title: 'Data Science для начинающих',
+		title: 'Data Science',
 		category: 'Аналитика',
 		rating: 4.7,
 		duration: '4 месяца',

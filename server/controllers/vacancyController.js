@@ -34,24 +34,41 @@ export const createVacancy = async (req, res) => {
 // Получение всех вакансий с фильтрацией
 export const getVacancies = async (req, res) => {
   try {
-    const { profession, status, salary, sort = '-createdAt' } = req.query;
-    const queryObject = {};
+    const { 
+      profession,
+      title,
+      location,
+      salary,
+      employmentType,
+      sort = '-createdAt' 
+    } = req.query;
+    
+    const queryObject = { status: 'active' };
 
-    // Фильтрация
+    // Фильтрация по профессии
     if (profession) {
       queryObject.profession = new RegExp(profession, 'i');
     }
-    if (status) {
-      queryObject.status = status;
+
+    // Фильтрация по названию
+    if (title) {
+      queryObject.title = new RegExp(title, 'i');
     }
+
+    // Фильтрация по городу
+    if (location) {
+      queryObject.location = new RegExp(location, 'i');
+    }
+
+    // Фильтрация по зарплате
     if (salary) {
       queryObject['salary.from'] = { $lte: Number(salary) };
       queryObject['salary.to'] = { $gte: Number(salary) };
     }
 
-    // Добавляем фильтр по активным вакансиям по умолчанию
-    if (!status) {
-      queryObject.status = 'active';
+    // Фильтрация по типу занятости
+    if (employmentType) {
+      queryObject.employmentType = employmentType;
     }
 
     const vacancies = await Vacancy.find(queryObject)
@@ -252,12 +269,3 @@ export const getRecommendedVacancies = async (req, res) => {
   }
 };
 
-export {
-  createVacancy,
-  getVacancies, 
-  getEmployerVacancies,
-  getVacancy,
-  updateVacancy, 
-  deleteVacancy,
-  getRecommendedVacancies
-};

@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, Link } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import './App.css';
-import './index.css';
 
 // Основные компоненты
 import Review from './components/main/Review';
@@ -12,22 +11,17 @@ import Footer from './layout/Footer';
 import Courses from './components/main/Courses';
 import CourseDetails from './components/courses/CourseDetails';
 import Lessons from './pages/Course/lessons';
-// Компоненты курсов```
+
 // Компоненты авторизации
 import Login from './auth/Login';
 import Register from './auth/Register';
 import { AuthProvider } from './context/AuthContext';
 
-// Компоненты админ-панели
-import JobsManagement from './pages/admin/JobsManagement';
-import InternshipsManagement from './pages/admin/InternshipsManagement';
-
-// Компоненты дашбордов
-import StudentDashboard from './pages/student/StudentDashboard';
-import EmployerDashboard from './pages/admin/dashboard/EmployerDashboard';
+// Компоненты вакансий
 import JobsList from './pages/jobs/JobsList';
 import JobDetails from './pages/jobs/JobDetails';
-
+import UserProfile from './pages/profile/UserProfile';
+import Testing from './components/Test/Testing';
 
 // Защищенный маршрут
 const PrivateRoute = ({ children, allowedRoles }) => {
@@ -37,46 +31,17 @@ const PrivateRoute = ({ children, allowedRoles }) => {
     return <div className="loading">Загрузка...</div>;
   }
 
+  // Проверяем авторизацию и роль
   if (!user || (allowedRoles && !allowedRoles.includes(user.role))) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/login" />;
   }
 
   return children;
 };
-
-// Компонент админ-панели
-const AdminLayout = ({ children }) => {
-  return (
-    <div className="admin-layout">
-      <aside className="admin-sidebar">
-        <nav>
-          <ul>
-            <li>
-              <Link to="/admin/dashboard">Панель управления</Link>
-            </li>
-            <li>
-              <Link to="/admin/jobs">Управление вакансиями</Link>
-            </li>
-            <li>
-              <Link to="/admin/internships">Управление стажировками</Link>
-            </li>
-          </ul>
-        </nav>
-      </aside>
-      <main className="admin-content">
-        {children}
-      </main>
-    </div>
-  );
-};
-
 function App() {
   const { user } = useAuth();
 
-  // Если пользователь авторизован, перенаправляем на соответствующий дашборд
-  
-
- const getHomeRedirect = () => {
+  const getHomeRedirect = () => {
     return (
       <main>
         <SearchMain />
@@ -97,7 +62,7 @@ function App() {
           path="/login" 
           element={
             user ? (
-              <Navigate to="/" replace /> // Меняем редирект на главную
+              <Navigate to="/" replace />
             ) : (
               <Login />
             )
@@ -107,54 +72,28 @@ function App() {
           path="/register" 
           element={
             user ? (
-              <Navigate to="/" replace /> // Меняем редирект на главную
+              <Navigate to="/" replace />
             ) : (
               <Register />
             )
           } 
         />
-        <Route path="/courses" element={<Courses />} />
-        <Route path="/courses/:courseId" element={<CourseDetails />} />
-        <Route path="/lessons/:courseId" element={<Lessons />} />
+
+        {/* Общедоступные маршруты */}
         <Route path="/jobs" element={<JobsList />} />
         <Route path="/jobs/:id" element={<JobDetails />} />
+        <Route path="/courses" element={<Courses />} />
+        <Route path="/courses/:courseId" element={<CourseDetails />} />
+        <Route path="/testing" element={<Testing />} />
+        <Route path="/lessons/:courseId" element={<Lessons />} />
 
-        {/* Маршруты для студента */}
-        <Route
-          path="/dashboard/*"
+        {/* Защищенные маршруты */}
+         <Route
+          path="/profile"
           element={
-            <PrivateRoute allowedRoles={['student']}>
-              <StudentDashboard />
+            <PrivateRoute allowedRoles={['student', 'employer']}>
+              <UserProfile />
             </PrivateRoute>
-          }
-        />
-
-        {/* Маршруты админ-панели для работодателя */}
-        <Route
-          path="/admin/*"
-          element={
-            <PrivateRoute allowedRoles={['employer']}>
-              <AdminLayout>
-                <Routes>
-                  <Route path="dashboard" element={<EmployerDashboard />} />
-                  <Route path="jobs" element={<JobsManagement />} />
-                  <Route path="internships" element={<InternshipsManagement />} />
-                  {/* Редирект на дашборд при пустом пути */}
-                  <Route path="" element={<Navigate to="dashboard" replace />} />
-                </Routes>
-              </AdminLayout>
-            </PrivateRoute>
-          }
-        />
-
-        {/* Редиректы */}
-        <Route
-          path="/dashboard"
-          element={
-            <Navigate
-              to={user?.role === 'employer' ? '/admin/dashboard' : '/dashboard'}
-              replace
-            />
           }
         />
 

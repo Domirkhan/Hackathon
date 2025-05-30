@@ -18,8 +18,6 @@ function Footer() {
           <ul className="footer-links">
             <li><Link to="/">Главная</Link></li>
             <li><Link to="/testing">Тест</Link></li>
-            <li><Link to="/about">О нас</Link></li>
-            <li><Link to="/contacts">Контакты</Link></li>
           </ul>
         </div>
 
@@ -28,7 +26,7 @@ function Footer() {
           <ul className="footer-contact">
             <li>Email: info@profjob.kz</li>
             <li>Тел: +7 (777) 777-77-77</li>
-            <li>Адрес: г. Астана, ул. Примерная 123</li>
+            <li>Адрес: г. Жезказган, ул. Примерная 123</li>
           </ul>
         </div>
 

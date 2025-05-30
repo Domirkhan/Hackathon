@@ -1,11 +1,13 @@
 .header {
-  background-color: #1B4965;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: rgba(27, 73, 101, 0.7); /* полупрозрачный фон */
+  box-shadow: none; /* убираем тень */
+  backdrop-filter: blur(8px); /* добавляем блюр */
   position: fixed;
   width: 100%;
   top: 0;
   left: 0;
   z-index: 1000;
+  border-bottom: 1px solid rgba(255,255,255,0.08); /* лёгкая линия */
 }
 
 .header-content {
@@ -15,12 +17,20 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background: transparent; /* убираем белый фон */
 }
-
+.logo-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
 .logo h2 {
   margin: 0;
-  color: #ffffff;
+  color: #fff;
   font-size: 1.5rem;
+  letter-spacing: 1px;
+  text-shadow: 0 1px 4px rgba(27,73,101,0.15); /* лёгкая тень для читаемости */
 }
 .logo-link {
   text-decoration: none;
@@ -33,6 +43,17 @@
     justify-content: center;
     align-items: center;
     gap: 1rem;
+}
+.logo-image{
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  margin-right: 10px;
+  object-fit: cover;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(27,73,101,0.10);
+  border: 2px solid #e7f2f8;
+  vertical-align: middle;
 }
 .nav-menu ul {
   list-style: none;
@@ -53,11 +74,19 @@
   color: #4fa6dc;
 }
 
+.nav-menu a, .logo-link {
+  color: #fff;
+  text-shadow: 0 1px 4px rgba(27,73,101,0.15);
+}
+
+.nav-menu a:hover, .logo-link:hover {
+  color: #4fa6dc;
+}
+
 .burger-menu {
   display: none;
   cursor: pointer;
   padding: 0.5rem;
-  padding-top: 0.8rem !important;
   width: 40px;
   height: 40px;
   display: flex;
@@ -65,13 +94,15 @@
   justify-content: center;
   align-items: center;
   position: relative;
+  background: transparent; /* Убираем фон */
+  border: none; /* Убираем границу */
 }
 
 .burger-line {
   width: 25px;
-  height: 2px; /* уменьшил толщину линии */
+  height: 2px;
   background-color: #ffffff;
-  margin: 4px 0; /* уменьшил отступы между линиями */
+  margin: 4px 0;
   transition: all 0.3s ease;
   position: absolute;
 }
@@ -108,7 +139,36 @@
 .mobile-menu {
   display: none;
 }
+.mobile-user-controls {
+    padding: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: 20px;
+}
+.mobile-user-info {
+    display: block;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 15px;
+}
 
+.mobile-logout-button {
+    width: 100%;
+    padding: 12px;
+    background: transparent;
+    border: 2px solid #ffffff;
+    color: #ffffff;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.mobile-logout-button:hover {
+    background: #ffffff;
+    color: #1B4965;
+}
 .mobile-nav {
   display: none;
   position: fixed;
@@ -194,7 +254,6 @@
   }
 
   .burger-menu {
-    display: block;
     cursor: pointer;
     padding: 0.5rem;
     z-index: 1001;
@@ -256,4 +315,111 @@
     background: transparent;
     color: #1B4965;
   }
+      .user-dropdown {
+        position: static;
+        width: 100%;
+        background: transparent;
+        box-shadow: none;
+        margin-top: 15px;
+        padding: 0;
+    }
+
+    .dropdown-item {
+        color: #ffffff;
+        padding: 12px 15px;
+        border-radius: 5px;
+        margin: 5px 0;
+    }
+
+    .dropdown-item:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .dropdown-item svg {
+        color: #ffffff;
+    }
+
+    /* Стили для иконок в мобильном меню */
+    .user-icon, 
+    .dropdown-item svg {
+        width: 20px;
+        height: 20px;
+        color: #ffffff;
+    }
+}
+
+.user-info {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.user-info:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.user-icon {
+    width: 24px;
+    height: 24px;
+    color: white;
+}
+
+.user-name {
+    color: white;
+    font-weight: 500;
+}
+
+.user-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 200px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem 0;
+    margin-top: 0.5rem;
+    z-index: 1000;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    color: #333;
+    text-decoration: none;
+    transition: background-color 0.2s;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.dropdown-item:hover {
+    background-color: #f5f5f5;
+}
+
+.dropdown-item svg {
+    width: 18px;
+    height: 18px;
+    color: #1B4965;
+}
+
+/* Добавьте для мобильной версии */
+@media (max-width: 768px) {
+    .user-dropdown {
+        position: static;
+        width: 100%;
+        margin-top: 0.5rem;
+        box-shadow: none;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
 }
